@@ -26,7 +26,7 @@ describe TrueControllingProtocol do
       a_block = double("Proc")
       a_block.should_not_receive :call
 
-      true.if_true lambda{}, a_block
+      true.if_true lambda{}, :else => a_block
     end
 
   end
