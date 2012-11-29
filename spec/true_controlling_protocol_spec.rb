@@ -15,18 +15,8 @@ describe TrueControllingProtocol do
       result.should == 7
     end
 
-    it 'should evaluate the block received as collaborator' do
-      a_block = double("Proc")
-      a_block.should_receive :call
-
-      true.if_true a_block
-    end
-
     it 'should not evaluate the :else block when provided' do
-      a_block = double("Proc")
-      a_block.should_not_receive :call
-
-      true.if_true lambda{}, :else => a_block
+      true.if_true lambda{}, :else => lambda { fail }
     end
 
   end
@@ -42,10 +32,7 @@ describe TrueControllingProtocol do
       end
 
       it 'should not evaluate the block received as collaborator' do
-        a_block = double("Proc")
-        a_block.should_not_receive :call
-
-        true.if_false a_block
+        true.if_false lambda { fail }
       end
 
     end
@@ -58,25 +45,11 @@ describe TrueControllingProtocol do
         result.should == 7
       end
 
-      it 'should evaluate the :else block' do
-        a_block = double("Proc")
-        a_block.should_receive :call
-
-        true.if_false lambda {}, :else => a_block
-      end
-
     end
 
   end
 
   describe 'when responding to the :if message' do
-
-    it "should evaluate the :true block" do
-      a_block = double("Proc")
-      a_block.should_receive :call
-
-      true.if :true => a_block
-    end
 
     it "should return the value of the :true block" do
       result = true.if :true => lambda{ 7 }
@@ -85,17 +58,11 @@ describe TrueControllingProtocol do
     end
 
     it "should not evaluate the :else block when provided" do
-      a_block = double("Proc")
-      a_block.should_not_receive :call
-
-      true.if :true => lambda{}, :else => a_block
+      true.if :true => lambda{}, :else => lambda{ fail }
     end
 
     it "should not evaluate the :false block when provided" do
-      a_block = double("Proc")
-      a_block.should_not_receive :call
-
-      true.if :true => lambda{}, :false => a_block
+      true.if :true => lambda{}, :false => lambda{ fail }
     end
 
     it "should fail when no collaborators are provided" do
@@ -110,7 +77,7 @@ describe TrueControllingProtocol do
 
   describe 'when responding to the :and message' do
 
-    it 'should return the value of the block received as' do
+    it 'should return the value of the block received as collaborator' do
       result = true.and { false }
 
       result.should == false
@@ -124,6 +91,10 @@ describe TrueControllingProtocol do
       result = true.or { false }
 
       result.should == true
+    end
+
+    it 'should not evaluate the block received as collaborator' do
+      true.or { fail }
     end
 
   end

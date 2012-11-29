@@ -18,10 +18,7 @@ describe FalseControllingProtocol do
       end
 
       it 'should not evaluate the block received as collaborator' do
-        a_block = double("Proc")
-        a_block.should_not_receive :call
-
-        false.if_true a_block
+        false.if_true lambda{ fail }
       end
 
     end
@@ -32,13 +29,6 @@ describe FalseControllingProtocol do
         result = false.if_true lambda {}, :else => lambda { 7 }
 
         result.should == 7
-      end
-
-      it 'should evaluate the :else block' do
-        a_block = double("Proc")
-        a_block.should_receive :call
-
-        false.if_true lambda {}, :else => a_block
       end
 
     end
@@ -52,30 +42,13 @@ describe FalseControllingProtocol do
       result.should == 7
     end
 
-    it 'should evaluate the block received as collaborator' do
-      a_block = double("Proc")
-      a_block.should_receive :call
-
-      false.if_false a_block
-    end
-
     it 'should not evaluate the :else block when provided' do
-      a_block = double("Proc")
-      a_block.should_not_receive :call
-
-      false.if_false lambda{}, :else => a_block
+      false.if_false lambda{}, :else => lambda{ fail }
     end
 
   end
 
   describe 'when responding to the :if message' do
-
-    it "should evaluate the :false block" do
-      a_block = double("Proc")
-      a_block.should_receive :call
-
-      false.if :false => a_block
-    end
 
     it "should return the value of the :false block" do
       result = false.if :false => lambda{ 7 }
@@ -84,17 +57,11 @@ describe FalseControllingProtocol do
     end
 
     it "should not evaluate the :else block when provided" do
-      a_block = double("Proc")
-      a_block.should_not_receive :call
-
-      false.if :false => lambda{}, :else => a_block
+      false.if :false => lambda{}, :else => lambda{ fail }
     end
 
     it "should not evaluate the :true block when provided" do
-      a_block = double("Proc")
-      a_block.should_not_receive :call
-
-      false.if :false => lambda{}, :true => a_block
+      false.if :false => lambda{}, :true => lambda{ fail }
     end
 
     it "should fail when no collaborators are provided" do
@@ -113,6 +80,10 @@ describe FalseControllingProtocol do
       result = false.and { true }
 
       result.should == false
+    end
+
+    it 'should not evaluate the block received as collaborator' do
+      false.and { fail }
     end
 
   end
