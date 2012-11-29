@@ -1,5 +1,4 @@
-require "rspec"
-require "../lib/false_controlling_protocol"
+require 'spec_helper'
 
 describe FalseControllingProtocol do
 

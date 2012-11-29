@@ -1,5 +1,4 @@
-require "rspec"
-require "../lib/true_controlling_protocol"
+require 'spec_helper'
 
 describe TrueControllingProtocol do
 
